@@ -1,0 +1,19 @@
+{
+  "name": "epson-teste-print",
+  "version": "1.0.0",
+  "main": "epos-2.27.0.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "escpos": "^3.0.0-alpha.6",
+    "escpos-usb": "^3.0.0-alpha.4",
+    "express": "^4.19.2",
+    "print": "^1.2.0"
+  }
+}
