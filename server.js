@@ -1,42 +1,64 @@
 const express = require('express');
 const escpos = require('escpos');
-const env = require('dotenv').config();
+const utils = require('./utils');
+require('dotenv').config();
+
+const cors = require('cors');
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  optionsSuccessStatus: 200,
+};
 
 const app = express();
 const port = 3000;
 
-// Configure middleware to parse JSON
-app.use(express.json());
+app.use(express.json(), cors(corsOptions));
 
-// Route to handle print requests
 app.post('/print', (req, res) => {
-  const { text } = req.body;
+  const text = req.body;
 
   if (!text) {
     return res.status(400).send('Text is required');
   }
 
-  // Set up the printer
   escpos.USB = require('escpos-usb');
 
   const idVendor = parseInt(process.env.vendorId);
   const idProduct = parseInt(process.env.productId);
-  console.log(idVendor, idProduct);
 
   const device = new escpos.USB(idVendor, idProduct);
   const printer = new escpos.Printer(device);
 
+  const data = utils.parsedData(text[0]);
+  if (!data) {
+    return res.status(400).send('Dados inválidos');
+  }
+
   device.open(() => {
     printer
-      .text(text, 'shift_jis')
-      .text('mãoáàãâäåæçèéêëìíîïðñòóôõöøùúûüýþÿ', 'utf8')
-      .text('mãoáàãâäåæçèéêëìíîïðñòóôõöøùúûüýþÿ', 'utf-8')
-      .text('mãoáàãâäåæçèéêëìíîïðñòóôõöøùúûüýþÿ', 'win1252')
+      .encode('ISO-8859-1')
+      .align('ct')
+      .font('A')
+      .text('Recibo do Associado')
+      .style('B')
+      .text(data.name)
+      .newLine()
+      .newLine()
+      .style('NORMAL')
+      .tableCustom(utils.table('Parcela', data.parcel))
+      .tableCustom(utils.table('Status', data.status))
+      .tableCustom(utils.table('Valor', data.value))
+      .tableCustom(utils.table('Data de Vencimento', utils.dateFormat(data.due_date)))
+      .newLine()
+      .newLine()
+      .text('______________________________________________')
+      .text('Assinatura do Associado')
+      .newLine()
       .cut()
       .close();
   });
 
-  res.send('Print job sent');
+  res.send('Enviado impressão');
 });
 
 app.listen(port, () => {
