@@ -16,16 +16,17 @@ var utils = {
     ];
   },
   parsedData: function (data) {
-    if (
-      !data.hasOwnProperty('name') ||
-      !data.hasOwnProperty('parcel') ||
-      !data.hasOwnProperty('value') ||
-      !data.hasOwnProperty('due_date') ||
-      !data.hasOwnProperty('status')
-    ) {
-      return null;
-    }
+    // if (
+    //   !data.hasOwnProperty('name') ||
+    //   !data.hasOwnProperty('parcel') ||
+    //   !data.hasOwnProperty('value') ||
+    //   !data.hasOwnProperty('due_date') ||
+    //   !data.hasOwnProperty('status')
+    // ) {
+    //   return null;
+    // }
 
+    console.log(data);
     let v = parseValue(data.value);
 
     return {
