@@ -1,17 +1,17 @@
 # Printer server for Epson TM-T20X
 
-## Installation
+## Instalar
 ```bash
 npm install
 ```
 
 ## Configuration
-Create a `.env` file with the following content:
+O arquivo `.env` deve ter as seguintes variáveis:
 ```dosini
 vendorId=1208
 productId=3623
 ```
-In node_modules, edit:
+Na pasta `node_modules` editar as linhas:
 - escpos-usb/index.js
 ```diff
 - let usb = require('usb');
@@ -21,12 +21,12 @@ In node_modules, edit:
 + let device = findByIds(vendorId, productId);
 ```
 
-## Usage
+## Para executar
 ### Linux
 ```bash
 sudo npm start
 ```
-### Windows (needs admin rights)
+### Windows (precisa abrir o cmd como admin)
 ```bash
 npm start
 ```
